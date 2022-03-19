@@ -15588,8 +15588,8 @@ function live() {
                         timeout += 500;
                         clearTimeout(a);
                     }, 250 * 5);
-                    checkWin()
                 }
+                checkWin()
             }
         }
     }
