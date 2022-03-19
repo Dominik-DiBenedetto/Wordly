@@ -3,17 +3,20 @@
     --key-width: 45px;
     --key-font-size: 1rem;
     --box-font-size: 2rem;
+    --back-f-s: .9rem;
 }
 @media screen and (max-width: 375px) {
     :root{
         --box-size: 55px;
         --key-width: 30px;
+        --back-f-s: .7rem;
     }
 }
 @media screen and (max-width: 414px) {
     :root{
         --box-size: 62px;
         --key-width: 32px;
+        --back-f-s: .6rem;
     }
 }
 /* @media screen and (width: 390px) {
@@ -28,6 +31,11 @@
         --key-width: 22px;
         --key-font-size: .7rem;
         --box-font-size: 1.7rem;
+        --back-f-s: .4rem;
+    }
+
+    .key.big.back{
+        font-size: .9rem;
     }
 }
 
@@ -124,6 +132,10 @@ body{
 .key.big{
     width: calc(var(--key-width)*1.5);
     height: calc(var(--key-width) + 10px);
+}
+
+.key.big.back{
+    font-size: var(--back-f-s);
 }
 
 .animate{
