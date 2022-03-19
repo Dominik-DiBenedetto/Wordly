@@ -15599,6 +15599,12 @@ function live() {
     document.addEventListener("keyup", (key) => {
         presskey(key.key);
     });
+    
+    [...document.querySelectorAll('.key')].forEach(key => {
+        key.addEventListener("click", (e) => {
+            presskey(e.target.textContent.toUpperCase())
+        })
+    })
 }
 
 live()
