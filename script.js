@@ -15286,7 +15286,7 @@ const dictionary = [
 
 function live() {
     const today = new Date()
-    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+1);
+    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+2);
     const msOffset = Date.now() - offsetFromDate;
     const dayOffset = msOffset / 1000 / 60 / 60 / 24;
     const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
