@@ -15292,8 +15292,7 @@ function live() {
     const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
     let guess = "";
     let guesses = 0;
-    let won = localStorage.getItem("won") || false;
-    console.log(Math.floor(Math.abs(dayOffset)))
+    let won = (localStorage.getItem("won") === "true");
 
     const grid = document.querySelector(".word-grid");
     const rows = [...grid.querySelectorAll(".row")];
@@ -15304,7 +15303,7 @@ function live() {
         }
     });
 
-    console.log(JSON.parse(localStorage.getItem("guesses")))
+    //console.log(JSON.parse(localStorage.getItem("guesses")))
     let guessArray = JSON.parse(localStorage.getItem("guesses")) || []
 
 
@@ -15473,6 +15472,7 @@ function live() {
     const saveGuesses = () => {
         localStorage.setItem('guesses', JSON.stringify(guessArray))
         localStorage.setItem("won", won)
+        localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
     }
 
     const checkWin = () => {
@@ -15505,7 +15505,7 @@ function live() {
             saveGuesses()
         } else {
             if (guesses === 6){
-                console.log("L");
+                //console.log("L");
                 createAlert(word);
             }
         }
@@ -15520,8 +15520,8 @@ function live() {
                     currentBox.textContent = key;
                     guess += key;
                 } else if ((!currentBox && guesses === 5) || won) {
-                    console.log("Game Over");
-                    console.log(`You ${won ? "won" : "lost"}`);
+                    //console.log("Game Over");
+                    //console.log(`You ${won ? "won" : "lost"}`);
                     if (!won) {
                         createAlert(word);
                     }
@@ -15539,7 +15539,7 @@ function live() {
                 if (guess.split("").length === 5) {
                     const row = getCurrentRow();
                     if (dictionary.includes(guess.toLowerCase())) {
-                        console.log("Submit Guess");
+                        //console.log("Submit Guess");
                         colorCode(guess);
                         if (guess === word) {
                             won = true;
@@ -15557,8 +15557,9 @@ function live() {
                         guess = "";
                         guesses += 1;
 
-                        console.log(won)
+                        //console.log(won)
                         checkWin()
+                        saveGuesses()
                     } else {
                         createAlert("Not In Word Bank!");
                         shakeTiles(row.children);
@@ -15570,7 +15571,7 @@ function live() {
 
     const loadOldGame = () => {
         if (guessArray !== [] && localStorage.getItem("LastPlayed") && parseInt(localStorage.getItem("LastPlayed")) === Math.floor(Math.abs(dayOffset))) {
-            console.log("Has Old Data")
+            //console.log("Has Old Data")
             for (i=0; i<guessArray.length; i++){
                 const row = rows[i].children
                 for (let j=0; j<5; j++) {
@@ -15583,7 +15584,7 @@ function live() {
             }
             let row = rows[guesses-1]
             if (won){
-                console.log("Already Won!")
+                //console.log("Already Won!")
                 let timeout = 0;
                 for (let i = 0; i < 5; i++) {
                     let a = setTimeout(() => {
@@ -15609,7 +15610,7 @@ function live() {
 
     [...document.querySelectorAll('.key')].forEach(key => {
         key.addEventListener("click", (e) => {
-            console.log(e.target)
+            //console.log(e.target)
             presskey(e.target.textContent.toUpperCase())
         })
     })
