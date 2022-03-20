@@ -15285,13 +15285,15 @@ const dictionary = [
 ];
 
 function live() {
-    const offsetFromDate = new Date(2022, 3, 19);
+    const today = new Date()
+    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+1);
     const msOffset = Date.now() - offsetFromDate;
     const dayOffset = msOffset / 1000 / 60 / 60 / 24;
     const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
     let guess = "";
     let guesses = 0;
     let won = localStorage.getItem("won") || false;
+    console.log(Math.floor(Math.abs(dayOffset)))
 
     const grid = document.querySelector(".word-grid");
     const rows = [...grid.querySelectorAll(".row")];
@@ -15302,6 +15304,7 @@ function live() {
         }
     });
 
+    console.log(JSON.parse(localStorage.getItem("guesses")))
     let guessArray = JSON.parse(localStorage.getItem("guesses")) || []
 
 
@@ -15566,7 +15569,7 @@ function live() {
     };
 
     const loadOldGame = () => {
-        if (guessArray !== []) {
+        if (guessArray !== [] && localStorage.getItem("LastPlayed") && parseInt(localStorage.getItem("LastPlayed")) === Math.floor(Math.abs(dayOffset))) {
             console.log("Has Old Data")
             for (i=0; i<guessArray.length; i++){
                 const row = rows[i].children
@@ -15591,6 +15594,10 @@ function live() {
                 }
                 checkWin()
             }
+        } else if(localStorage.getItem("LastPlayed") && localStorage.getItem("LastPlayed") !== Math.floor(Math.abs(dayOffset))) {
+            localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
+            localStorage.removeItem("guesses")
+            localStorage.removeItem("won")
         }
     }
 
@@ -15599,9 +15606,10 @@ function live() {
     document.addEventListener("keyup", (key) => {
         presskey(key.key);
     });
-    
+
     [...document.querySelectorAll('.key')].forEach(key => {
         key.addEventListener("click", (e) => {
+            console.log(e.target)
             presskey(e.target.textContent.toUpperCase())
         })
     })
