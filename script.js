@@ -15459,14 +15459,6 @@ function live() {
                     guessParam
                 )
             ) {
-                console.log(
-                    checkForMultiLetters(
-                        greenLetters,
-                        yellowLetters,
-                        letter,
-                        guessParam
-                    )
-                );
                 flipTile(currentRow[i], timer);
                 setTimeout(
                     () => currentRow[i].classList.add("yellow"),
