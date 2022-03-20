@@ -15286,7 +15286,7 @@ const dictionary = [
 
 function live() {
     const today = new Date()
-    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+3);
+    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+4);
     const msOffset = Date.now() - offsetFromDate;
     const dayOffset = msOffset / 1000 / 60 / 60 / 24;
     const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
@@ -15595,7 +15595,8 @@ function live() {
                 }
                 checkWin()
             }
-        } else if(localStorage.getItem("LastPlayed") && localStorage.getItem("LastPlayed") !== Math.floor(Math.abs(dayOffset))) {
+        } else if(localStorage.getItem("LastPlayed") !== Math.floor(Math.abs(dayOffset))) {
+            console.log("New Day")
             localStorage.removeItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
             localStorage.removeItem("guesses")
             localStorage.removeItem("won")
