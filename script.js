@@ -15596,7 +15596,7 @@ function live() {
                 checkWin()
             }
         } else if(localStorage.getItem("LastPlayed") && localStorage.getItem("LastPlayed") !== Math.floor(Math.abs(dayOffset))) {
-            localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
+            localStorage.removeItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
             localStorage.removeItem("guesses")
             localStorage.removeItem("won")
         }
