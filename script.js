@@ -15285,14 +15285,18 @@ const dictionary = [
 ];
 
 function live() {
-    const today = new Date()
-    const offsetFromDate = new Date(today.getFullYear(), today.getMonth()+1, today.getDate()+4);
+    const today = new Date();
+    const offsetFromDate = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        today.getDate() + 4
+    );
     const msOffset = Date.now() - offsetFromDate;
     const dayOffset = msOffset / 1000 / 60 / 60 / 24;
     const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
     let guess = "";
     let guesses = 0;
-    let won = (localStorage.getItem("won") === "true");
+    let won = localStorage.getItem("won") === "true";
 
     const grid = document.querySelector(".word-grid");
     const rows = [...grid.querySelectorAll(".row")];
@@ -15304,8 +15308,7 @@ function live() {
     });
 
     //console.log(JSON.parse(localStorage.getItem("guesses")))
-    let guessArray = JSON.parse(localStorage.getItem("guesses")) || []
-
+    let guessArray = JSON.parse(localStorage.getItem("guesses")) || [];
 
     const isLetter = (str) => {
         return str.length === 1 && str.match(/[A-Z]/i);
@@ -15337,26 +15340,27 @@ function live() {
         });
         return [firstFound];
     };
-    
+
     const getCurrentRow = () => {
         return rows[guesses];
     };
 
     const getCurrentBoxForDeleting = () => {
-        const row = [...getCurrentRow().children]
-        let firstFound = null
+        const row = [...getCurrentRow().children];
+        let firstFound = null;
 
-        for (let i=0; i<row.length; i++){
-            const tile = row[i]
-            if (tile.textContent === "" && firstFound === null) firstFound = row[i-1] ? row[i-1] : row[i]
+        for (let i = 0; i < row.length; i++) {
+            const tile = row[i];
+            if (tile.textContent === "" && firstFound === null)
+                firstFound = row[i - 1] ? row[i - 1] : row[i];
         }
 
         if (firstFound === null) {
-            firstFound = row[row.length-1]
+            firstFound = row[row.length - 1];
         }
-        return firstFound
-    }
-    
+        return firstFound;
+    };
+
     function getOccurrences(array, value) {
         let count = 0;
         array.forEach((v) => v === value && count++);
@@ -15410,6 +15414,26 @@ function live() {
         }
     };
 
+    const checkForMultiLetters = (
+        greenLetters,
+        yellowLetters,
+        letter,
+        guess
+    ) => {
+        return (
+            (word.includes(letter) &&
+                getOccurrences(word.toUpperCase().split(""), letter) ===
+                    getOccurrences(guess.split(""), letter)) ||
+            (word.includes(letter) &&
+                getOccurrences(word.toUpperCase().split(""), letter) === 1 &&
+                getOccurrences(greenLetters, letter) === 0) ||
+            (word.includes(letter) &&
+                getOccurrences(word.toUpperCase().split(""), letter) === 1 &&
+                getOccurrences(yellowLetters, letter) === 0 &&
+                getOccurrences(greenLetters, letter) === 0)
+        );
+    };
+
     const colorCode = (guessParam) => {
         let greenLetters = [];
         let yellowLetters = [];
@@ -15428,16 +15452,21 @@ function live() {
                 greenLetters.push(letter);
                 colorKeyBoardKey(letter, "green");
             } else if (
-                (word.includes(letter) &&
-                    getOccurrences(word.toUpperCase().split(""), letter) > 1) ||
-                (word.includes(letter) &&
-                    getOccurrences(word.toUpperCase().split(""), letter) ===
-                        1 &&
-                    getOccurrences(greenLetters, letter) === 0) || (word.includes(letter) &&
-                    getOccurrences(word.toUpperCase().split(""), letter) ===
-                        1 &&
-                    getOccurrences(yellowLetters, letter) === 0)
+                checkForMultiLetters(
+                    greenLetters,
+                    yellowLetters,
+                    letter,
+                    guessParam
+                )
             ) {
+                console.log(
+                    checkForMultiLetters(
+                        greenLetters,
+                        yellowLetters,
+                        letter,
+                        guessParam
+                    )
+                );
                 flipTile(currentRow[i], timer);
                 setTimeout(
                     () => currentRow[i].classList.add("yellow"),
@@ -15445,7 +15474,7 @@ function live() {
                 );
                 timer += 250;
                 colorKeyBoardKey(letter, "yellow");
-                yellowLetters.push(letter)
+                yellowLetters.push(letter);
             } else {
                 flipTile(currentRow[i], timer);
                 setTimeout(
@@ -15470,46 +15499,46 @@ function live() {
     };
 
     const saveGuesses = () => {
-        localStorage.setItem('guesses', JSON.stringify(guessArray))
-        localStorage.setItem("won", won)
-        localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
-    }
+        localStorage.setItem("guesses", JSON.stringify(guessArray));
+        localStorage.setItem("won", won);
+        localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)));
+    };
 
     const checkWin = () => {
         if (won) {
             switch (guesses) {
                 case 1:
-                    createAlert("Suspiciously Good")
+                    createAlert("Suspiciously Good");
                     break;
-                
+
                 case 2:
-                    createAlert("Amazing!")
+                    createAlert("Amazing!");
                     break;
-                
+
                 case 3:
-                    createAlert("Good Work!")
+                    createAlert("Good Work!");
                     break;
 
                 case 4:
-                    createAlert("Not Bad")
+                    createAlert("Not Bad");
                     break;
 
                 case 5:
-                    createAlert("Phew!")
+                    createAlert("Phew!");
                     break;
 
                 case 6:
-                    createAlert("Clutch!")
+                    createAlert("Clutch!");
                     break;
             }
-            saveGuesses()
+            saveGuesses();
         } else {
-            if (guesses === 6){
+            if (guesses === 6) {
                 //console.log("L");
                 createAlert(word);
             }
         }
-    }
+    };
 
     const presskey = (lowerKey) => {
         const key = lowerKey.toUpperCase();
@@ -15553,13 +15582,13 @@ function live() {
                             }
                         }
 
-                        guessArray.push(guess)
+                        guessArray.push(guess);
                         guess = "";
                         guesses += 1;
 
                         //console.log(won)
-                        checkWin()
-                        saveGuesses()
+                        checkWin();
+                        saveGuesses();
                     } else {
                         createAlert("Not In Word Bank!");
                         shakeTiles(row.children);
@@ -15570,20 +15599,25 @@ function live() {
     };
 
     const loadOldGame = () => {
-        if (guessArray !== [] && localStorage.getItem("LastPlayed") && parseInt(localStorage.getItem("LastPlayed")) === Math.floor(Math.abs(dayOffset))) {
+        if (
+            guessArray !== [] &&
+            localStorage.getItem("LastPlayed") &&
+            parseInt(localStorage.getItem("LastPlayed")) ===
+                Math.floor(Math.abs(dayOffset))
+        ) {
             //console.log("Has Old Data")
-            for (i=0; i<guessArray.length; i++){
-                const row = rows[i].children
-                for (let j=0; j<5; j++) {
-                    const tile = row[j]
-                    const letter = guessArray[i][j]
-                    tile.textContent = letter
+            for (i = 0; i < guessArray.length; i++) {
+                const row = rows[i].children;
+                for (let j = 0; j < 5; j++) {
+                    const tile = row[j];
+                    const letter = guessArray[i][j];
+                    tile.textContent = letter;
                 }
-                colorCode(guessArray[i])
-                guesses++
+                colorCode(guessArray[i]);
+                guesses++;
             }
-            let row = rows[guesses-1]
-            if (won){
+            let row = rows[guesses - 1];
+            if (won) {
                 //console.log("Already Won!")
                 let timeout = 0;
                 for (let i = 0; i < 5; i++) {
@@ -15593,28 +15627,31 @@ function live() {
                         clearTimeout(a);
                     }, 250 * 5);
                 }
-                checkWin()
+                checkWin();
             }
-        } else if(localStorage.getItem("LastPlayed") !== Math.floor(Math.abs(dayOffset))) {
-            console.log("New Day")
-            localStorage.removeItem("LastPlayed", Math.floor(Math.abs(dayOffset)))
-            localStorage.removeItem("guesses")
-            localStorage.removeItem("won")
+        } else if (
+            localStorage.getItem("LastPlayed") &&
+            localStorage.getItem("LastPlayed") !==
+                Math.floor(Math.abs(dayOffset))
+        ) {
+            localStorage.removeItem("LastPlayed");
+            localStorage.removeItem("guesses");
+            localStorage.removeItem("won");
         }
-    }
+    };
 
-    loadOldGame()
+    loadOldGame();
 
     document.addEventListener("keyup", (key) => {
         presskey(key.key);
     });
 
-    [...document.querySelectorAll('.key')].forEach(key => {
+    [...document.querySelectorAll(".key")].forEach((key) => {
         key.addEventListener("click", (e) => {
             //console.log(e.target)
-            presskey(e.target.textContent.toUpperCase())
-        })
-    })
+            presskey(e.target.textContent.toUpperCase());
+        });
+    });
 }
 
-live()
+live();
