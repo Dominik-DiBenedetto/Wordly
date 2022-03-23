@@ -15286,17 +15286,14 @@ const dictionary = [
 
 function live() {
     const today = new Date();
-    const offsetFromDate = new Date(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        today.getDate() + 4
-    );
-    const msOffset = Date.now() - offsetFromDate;
-    const dayOffset = msOffset / 1000 / 60 / 60 / 24;
-    const word = targetWords[Math.floor(Math.abs(dayOffset))].toUpperCase();
+    const offsetFromDate = new Date(2022, 4, 20);
+    const msOffset = Date.now() - offsetFromDate
+    const dayOffset = (msOffset / 1000 / 60 / 60 / 24) + 59;
+    const word = targetWords[Math.abs(Math.floor(dayOffset))].toUpperCase();
     let guess = "";
     let guesses = 0;
     let won = localStorage.getItem("won") === "true";
+    // console.log(Math.abs(Math.floor(dayOffset)), won, localStorage)
 
     const grid = document.querySelector(".word-grid");
     const rows = [...grid.querySelectorAll(".row")];
@@ -15459,6 +15456,14 @@ function live() {
                     guessParam
                 )
             ) {
+                console.log(
+                    checkForMultiLetters(
+                        greenLetters,
+                        yellowLetters,
+                        letter,
+                        guessParam
+                    )
+                );
                 flipTile(currentRow[i], timer);
                 setTimeout(
                     () => currentRow[i].classList.add("yellow"),
@@ -15493,7 +15498,7 @@ function live() {
     const saveGuesses = () => {
         localStorage.setItem("guesses", JSON.stringify(guessArray));
         localStorage.setItem("won", won);
-        localStorage.setItem("LastPlayed", Math.floor(Math.abs(dayOffset)));
+        localStorage.setItem("LastPlayed", Math.abs(Math.floor(dayOffset)));
     };
 
     const checkWin = () => {
@@ -15593,9 +15598,8 @@ function live() {
     const loadOldGame = () => {
         if (
             guessArray !== [] &&
-            localStorage.getItem("LastPlayed") &&
             parseInt(localStorage.getItem("LastPlayed")) ===
-                Math.floor(Math.abs(dayOffset))
+                Math.abs(Math.floor(dayOffset))
         ) {
             //console.log("Has Old Data")
             for (i = 0; i < guessArray.length; i++) {
@@ -15624,8 +15628,9 @@ function live() {
         } else if (
             localStorage.getItem("LastPlayed") &&
             localStorage.getItem("LastPlayed") !==
-                Math.floor(Math.abs(dayOffset))
+            Math.abs(Math.floor(dayOffset))
         ) {
+            console.log("YEET")
             localStorage.removeItem("LastPlayed");
             localStorage.removeItem("guesses");
             localStorage.removeItem("won");
