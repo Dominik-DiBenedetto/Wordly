@@ -15624,6 +15624,8 @@ function live() {
                     }, 250 * 5);
                 }
                 checkWin();
+            } else {
+                createAlert(word);
             }
         } else if (
             localStorage.getItem("LastPlayed") &&
