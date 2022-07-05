@@ -15624,7 +15624,7 @@ function live() {
                     }, 250 * 5);
                 }
                 checkWin();
-            } else if(!won && guesses !== 6) {
+            } else if(!won && guesses == 6) {
                 
                 createAlert(word);
             }
